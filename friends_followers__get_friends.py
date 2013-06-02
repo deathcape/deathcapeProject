@@ -38,6 +38,5 @@ ids = []
 wait_period = 2 
 cursor = -1
 
-r = t.users.show.name(screen_name='deathcape',include_entities='id')
-for t in r:
-	print t.id
+r = t.users.show(screen_name='deathcape')
+print t.users.show(screen_name='deathcape')['screen_name']
