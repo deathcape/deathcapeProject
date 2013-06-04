@@ -1,8 +1,8 @@
 import boto
 
 
-AWS_ACCESS_KEY = 'AKIAIECYF4DK2DN7QYZQ'
-AWS_ACCESS_SECRET = '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'
+AWS_ACCESS_KEY = sys.argv[1] 
+AWS_ACCESS_SECRET = sys.argv[2]
 
 sdb = boto.connect_sdb(AWS_ACCESS_KEY, AWS_ACCESS_SECRET)
 # domain = sdb.create_domain('deathcapeDomain')
