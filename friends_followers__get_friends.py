@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import sys
 import os
 import time
@@ -7,8 +6,8 @@ import twitter
 from twitter.oauth import write_token_file, read_token_file
 from twitter.oauth_dance import oauth_dance
 
-CONSUMER_KEY = 'rNpyePNusL8TEinRoLTQw'
-CONSUMER_SECRET = 'HTXxYscwjjDCxJl3FJHgOpJO6oIJvRzpWH6yKncTo'
+CONSUMER_KEY = sys.argv[2] 
+CONSUMER_SECRET = sys.argv[3] 
 APP_NAME = 'deathcapeProject'
 
 SCREEN_NAME = sys.argv[1]
@@ -38,5 +37,43 @@ ids = []
 wait_period = 2 
 cursor = -1
 
-r = t.users.show(screen_name='deathcape')
-print t.users.show(screen_name='deathcape')['screen_name']
+while cursor != 0:
+ if wait_period > 3600: 
+  print 'Too many retries. Saving partial data to disk and exiting'
+  f = file('%s.friend_ids' % str(cursor), 'wb')
+  cPickle.dump(ids, f)
+  f.close()
+  exit()
+
+ try:
+  response = t.friends.ids(screen_name=SCREEN_NAME, cursor=cursor)
+  print response
+  ids.extend(response['ids'])
+  wait_period = 2
+ except twitter.api.TwitterHTTPError, e:
+  if e.e.code == 401:
+   print 'Encountered 401 Error (Not Authorized)'
+   print 'User %s is protecting their tweets' % (SCREEN_NAME, )
+  elif e.e.code in (502, 503):
+   print 'Encountered %i Error. Trying again in %i seconds' % (e.e.code, wait_period)
+   time.sleep(wait_period)
+   wait_period *= 1.5
+   continue
+  elif t.account.rate_limit_status()['remaining_hits'] == 0:
+   status = t.account.rate_limit_status()
+   now = time.time() # UTC
+   when_rate_limit_resets = status['reset_time_in_seconds'] # UTC
+   sleep_time = when_rate_limit_resets - now
+   print 'Rate limit reached. Trying again in %i seconds' % (sleep_time,)
+   time.sleep(sleep_time)
+   continue
+ cursor = response['next_cursor']
+ if len(ids) >= friends_limit:
+  break
+
+# print ids
+resp = t.friends.ids(screen_name=SCREEN_NAME)['ids']
+for i in range(len(resp)):
+	if i < 100:
+		print t.users.show(id=resp[i])['screen_name']
+
