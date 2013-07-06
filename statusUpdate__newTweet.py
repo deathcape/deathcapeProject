@@ -25,13 +25,13 @@ def oauth_login(app_name=APP_NAME,consumer_key=CONSUMER_KEY,consumer_secret=CONS
 		write_token_file(token_file,oatuh_token,oauth_token_secret)
 		print >> sys.stderr, "OAuth Success. Token file stored to", token_file
 
-	return twitter.Twitter(domain='api.twitter.com', api_version='1', auth=twitter.oauth.OAuth(oauth_token,oauth_token_secret, consumer_key, consumer_secret))
+	return twitter.Twitter(domain='api.twitter.com', api_version='1.1', auth=twitter.oauth.OAuth(oauth_token,oauth_token_secret, consumer_key, consumer_secret))
 
 if __name__ == '__main__':
 	oauth_login(APP_NAME,CONSUMER_KEY,CONSUMER_SECRET)
 
 (oauth_token, oauth_token_secret) = read_token_file('out/twitter_oauth')
-t = twitter.Twitter(domain='api.twitter.com', api_version='1', auth=twitter.oauth.OAuth(oauth_token,oauth_token_secret, CONSUMER_KEY, CONSUMER_SECRET))
+t = twitter.Twitter(domain='api.twitter.com', api_version='1.1', auth=twitter.oauth.OAuth(oauth_token,oauth_token_secret, CONSUMER_KEY, CONSUMER_SECRET))
 
 
 t.statuses.update(status=SCREEN_NAME)
