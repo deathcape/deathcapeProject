@@ -8,8 +8,8 @@ import twitter
 from twitter.oauth import write_token_file, read_token_file
 from twitter.oauth_dance import oauth_dance
 
-CONSUMER_KEY = 'rNpyePNusL8TEinRoLTQw' 
-CONSUMER_SECRET = 'HTXxYscwjjDCxJl3FJHgOpJO6oIJvRzpWH6yKncTo'
+CONSUMER_KEY = sys.argv[4] 
+CONSUMER_SECRET = sys.argv[5]
 APP_NAME = 'deathcapeProject'
 
 
